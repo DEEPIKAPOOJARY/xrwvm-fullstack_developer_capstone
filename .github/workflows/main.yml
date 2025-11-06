@@ -32,10 +32,10 @@ jobs:
     - name: Run Linter
       run: |
         pwd
-        # This command finds all Python files recursively and runs flake8 on them
-        find . -name "*.py" -exec flake8 {} +
-        echo "Linted all the python files successfully"
-
+          # Find all Python files excluding migrations and virtual environment
+          find . -name "*.py" ! -path "./**/migrations/*" ! -path "./env/*" -exec flake8 {} +
+          echo "Linted all Python files successfully"
+          
   lint_js:
       name: Lint JavaScript Files
       runs-on: ubuntu-latest
