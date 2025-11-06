@@ -1,14 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
-from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 import logging
 import json
-from django.views.decorators.csrf import csrf_exempt
 
-from .models import CarMake, CarModel
+from .models import CarModel
 from .populate import initiate
 from .restapis import get_request, analyze_review_sentiments, post_review
 
@@ -23,7 +20,9 @@ def login_user(request):
     user = authenticate(username=username, password=password)
     if user:
         login(request, user)
-        return JsonResponse({"userName": username, "status": "Authenticated"})
+        return JsonResponse(
+            {"userName": username, "status": "Authenticated"}
+        )
     return JsonResponse({"userName": username})
 
 
@@ -57,7 +56,10 @@ def registration(request):
             email=email
         )
         login(request, user)
-        return JsonResponse({"userName": username, "status": "Authenticated"})
+        return JsonResponse(
+            {"userName": username, "status": "Authenticated"}
+        )
+
     return JsonResponse({"userName": username, "error": "Already Registered"})
 
 
@@ -77,7 +79,9 @@ def get_dealer_reviews(request, dealer_id):
     for review_detail in reviews:
         try:
             response = analyze_review_sentiments(review_detail['review'])
-            review_detail['sentiment'] = response.get('sentiment', 'neutral') if response else 'neutral'
+            review_detail['sentiment'] = (
+                response.get('sentiment', 'neutral') if response else 'neutral'
+            )
         except Exception as e:
             print("Sentiment analyzer error:", e)
             review_detail['sentiment'] = 'neutral'
@@ -103,7 +107,9 @@ def add_review(request):
         post_review(data)
         return JsonResponse({"status": 200})
     except Exception:
-        return JsonResponse({"status": 401, "message": "Error in posting review"})
+        return JsonResponse(
+            {"status": 401, "message": "Error in posting review"}
+        )
 
 
 def get_cars(request):
@@ -117,8 +123,4 @@ def get_cars(request):
             "CarMake": model.car_make.name,
             "Type": model.type,
             "Year": model.year,
-            "DealerID": model.dealer_id,
-        }
-        for model in car_models
-    ]
-    return JsonResponse({"CarModels": data})
+            "DealerID": mo
