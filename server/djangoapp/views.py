@@ -123,4 +123,8 @@ def get_cars(request):
             "CarMake": model.car_make.name,
             "Type": model.type,
             "Year": model.year,
-            "DealerID": mo
+            "DealerID": model.dealer_id,
+        }
+        for model in car_models
+    ]
+    return JsonResponse({"CarModels": data})
