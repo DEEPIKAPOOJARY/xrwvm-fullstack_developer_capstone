@@ -1,0 +1,12 @@
+{
+  "esversion": 8,
+  "node": true,
+  "undef": true,
+  "unused": true,
+  "globals": {
+    "require": true,
+    "module": true,
+    "console": true,
+    "process": true
+  }
+}
